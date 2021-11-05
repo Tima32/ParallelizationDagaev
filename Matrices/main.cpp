@@ -30,6 +30,7 @@ int main()
     Matrix d = Matrix(3, 3);
     fill(d);
     cout << d;
-    cout << d.determinant();
+    cout << d.determinant() << endl;
+    cout << d.inverse();
 	return 0;
 }

@@ -35,6 +35,8 @@ namespace PD
 
         Matrix getMinor(const size_t n, const size_t m) const;
         double determinant() const;
+
+        Matrix inverse() const;
 	private:
 		size_t x{0};
 		size_t y{0};

@@ -179,9 +179,28 @@ namespace PD
             k *= -1;
         }
         return d;
+
     }
 
+    Matrix Matrix::inverse() const {
+        if (this->x != this->y) {
+            throw std::logic_error("Matrix should be square");
+        }
+        double d = this->determinant();
+        if (d == 0) {
+            throw std::logic_error("determinant of source matrix is zero");
+        }
 
+        Matrix conjugate = Matrix(this->x, this->y);
+        int k = 1;
+        for (size_t i = 0; i < conjugate.getSizeX(); ++i) {
+            for (size_t j = 0; j < conjugate.getSizeY(); ++j) {
+                conjugate[i][j] = k * this->getMinor(i + 1, j + 1).determinant();
+                k *= -1;
+            }
+        }
+        return conjugate.transpose() * (1/d) ;
+    }
 }
 
 std::ostream& operator<<(std::ostream& out, const PD::Matrix& matrix)
