@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b13ec803-07a9-46e5-ac07-01c5a0bc9b1d}</ProjectGuid>
+    <ProjectGuid>{8e3d90f3-d2ac-4691-b812-4122faafff1a}</ProjectGuid>
     <RootNamespace>Matrices</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -145,11 +145,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="..\..\Matrices\main.cpp" />
+    <ClCompile Include="..\..\Matrices\Matrix.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Matrix.hpp" />
+    <ClInclude Include="..\..\Matrices\Matrix.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
