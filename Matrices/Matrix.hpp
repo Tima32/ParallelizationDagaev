@@ -31,6 +31,10 @@ namespace PD
 		Matrix operator*(double r) const;
 		Matrix mul(const Matrix& r) const; //exception
 
+        Matrix transpose() const;
+
+        Matrix getMinor(const size_t n, const size_t m) const;
+        double determinant() const;
 	private:
 		size_t x{0};
 		size_t y{0};

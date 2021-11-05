@@ -80,6 +80,7 @@ namespace PD
 	Matrix Matrix::operator-(double r) const noexcept
 	{
 		Matrix result(*this);
+        result.fill(0);
 
 		for (size_t i = 0; i < matrix.size(); ++i)
 			result.matrix[i] -= r;
@@ -96,7 +97,6 @@ namespace PD
 	Matrix Matrix::operator*(const Matrix& r) const noexcept
 	{
 		Matrix result(r.x, y);
-		result.fill(0);
 
 		for (size_t iy = 0; iy < y; iy++)
 		{
@@ -111,6 +111,7 @@ namespace PD
 
 		return result;
 	}
+
 	Matrix Matrix::operator*(double r) const
 	{
 		Matrix result(*this);
@@ -118,12 +119,69 @@ namespace PD
 			a *= r;
 		return result;
 	}
+
 	Matrix Matrix::mul(const Matrix& r) const
 	{
 		if (x != r.y || y != r.x)
 			throw std::logic_error("Matrices of the wrong dimension");
 		return *this * r;
 	}
+
+    Matrix Matrix::transpose() const
+    {
+        Matrix other = Matrix(this->y, this->x);
+        for(size_t i = 0; i < other.getSizeX(); ++i) {
+            for (size_t j = 0; j < other.getSizeY(); ++j) {
+              other[i][j] = (*this)[j][i];
+            }
+        }
+        return other;
+    }
+
+    Matrix Matrix::getMinor(const size_t n, const size_t m) const
+    {
+        if ((this->x == 1) || (this->y == 1)) {
+            throw std::logic_error("Y and X should be more than 1");
+        }
+        if ((this->x < n) || (1 > n) || (this->y < m) || (1 > m)) {
+            throw std::logic_error("Wrong n or m");
+        }
+        Matrix minor = Matrix(this->x - 1, this->y - 1);
+        bool flag_row = false;
+        bool flag_col = false;
+        for(size_t i = 0; i < minor.getSizeX(); ++i) {
+            for(size_t j = 0; j < minor.getSizeY(); ++j) {
+                if (i == n-1) {
+                    flag_row = true;
+                }
+                if (j == m-1) {
+                    flag_col = true;
+                }
+                minor[i][j]  = (*this)[i + flag_row][j + flag_col];
+            }
+            flag_col = false;
+        }
+        return minor;
+    }
+
+    double Matrix::determinant() const
+    {
+        if (this->x != this->y) {
+            throw std::logic_error("Matrix should be square");
+        }
+        double d = 0;
+        int k = 1;
+        if (this->x == 1) {
+          return (*this)[0][0];
+        }
+        for(size_t i = 0; i < this->x; ++i) {
+            d += k * (*this)[i][0] * this->getMinor(i+1, 1).determinant();
+            k *= -1;
+        }
+        return d;
+    }
+
+
 }
 
 std::ostream& operator<<(std::ostream& out, const PD::Matrix& matrix)
