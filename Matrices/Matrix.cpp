@@ -80,7 +80,6 @@ namespace PD
 	Matrix Matrix::operator-(double r) const noexcept
 	{
 		Matrix result(*this);
-        result.fill(0);
 
 		for (size_t i = 0; i < matrix.size(); ++i)
 			result.matrix[i] -= r;
@@ -97,6 +96,7 @@ namespace PD
 	Matrix Matrix::operator*(const Matrix& r) const noexcept
 	{
 		Matrix result(r.x, y);
+		result.fill(0);
 
 		for (size_t iy = 0; iy < y; iy++)
 		{
@@ -127,80 +127,80 @@ namespace PD
 		return *this * r;
 	}
 
-    Matrix Matrix::transpose() const
-    {
-        Matrix other = Matrix(this->y, this->x);
-        for(size_t i = 0; i < other.getSizeX(); ++i) {
-            for (size_t j = 0; j < other.getSizeY(); ++j) {
-              other[i][j] = (*this)[j][i];
-            }
-        }
-        return other;
-    }
+	Matrix Matrix::transpose() const
+	{
+		Matrix other(this->y, this->x);
+		for(size_t i = 0; i < other.getSizeX(); ++i) {
+			for (size_t j = 0; j < other.getSizeY(); ++j) {
+				other[i][j] = (*this)[j][i];
+			}
+		}
+		return other;
+	}
 
-    Matrix Matrix::getMinor(const size_t n, const size_t m) const
-    {
-        if ((this->x == 1) || (this->y == 1)) {
-            throw std::logic_error("Y and X should be more than 1");
-        }
-        if ((this->x < n) || (1 > n) || (this->y < m) || (1 > m)) {
-            throw std::logic_error("Wrong n or m");
-        }
-        Matrix minor = Matrix(this->x - 1, this->y - 1);
-        bool flag_row = false;
-        bool flag_col = false;
-        for(size_t i = 0; i < minor.getSizeX(); ++i) {
-            for(size_t j = 0; j < minor.getSizeY(); ++j) {
-                if (i == n-1) {
-                    flag_row = true;
-                }
-                if (j == m-1) {
-                    flag_col = true;
-                }
-                minor[i][j]  = (*this)[i + flag_row][j + flag_col];
-            }
-            flag_col = false;
-        }
-        return minor;
-    }
+	Matrix Matrix::getMinor(const size_t n, const size_t m) const
+	{
+		if ((this->x == 1) || (this->y == 1)) {
+			throw std::logic_error("Y and X should be more than 1");
+		}
+		if ((this->x < n) || (1 > n) || (this->y < m) || (1 > m)) {
+			throw std::logic_error("Wrong n or m");
+		}
+		Matrix minor(this->x - 1, this->y - 1);
+		bool flag_row = false;
+		bool flag_col = false;
+		for(size_t i = 0; i < minor.getSizeX(); ++i) {
+			for(size_t j = 0; j < minor.getSizeY(); ++j) {
+				if (i == n-1) {
+					flag_row = true;
+				}
+				if (j == m-1) {
+					flag_col = true;
+				}
+				minor[i][j] = (*this)[i + flag_row][j + flag_col];
+			}
+			flag_col = false;
+		}
+		return minor;
+	}
 
-    double Matrix::determinant() const
-    {
-        if (this->x != this->y) {
-            throw std::logic_error("Matrix should be square");
-        }
-        double d = 0;
-        int k = 1;
-        if (this->x == 1) {
-          return (*this)[0][0];
-        }
-        for(size_t i = 0; i < this->x; ++i) {
-            d += k * (*this)[i][0] * this->getMinor(i+1, 1).determinant();
-            k *= -1;
-        }
-        return d;
+	double Matrix::determinant() const
+	{
+		if (this->x != this->y) {
+			throw std::logic_error("Matrix should be square");
+		}
+		double d = 0;
+		int k = 1;
+		if (this->x == 1) {
+			return (*this)[0][0];
+		}
+		for(size_t i = 0; i < this->x; ++i) {
+			d += k * (*this)[i][0] * this->getMinor(i+1, 1).determinant();
+			k *= -1;
+		}
+		return d;
 
-    }
+	}
 
-    Matrix Matrix::inverse() const {
-        if (this->x != this->y) {
-            throw std::logic_error("Matrix should be square");
-        }
-        double d = this->determinant();
-        if (d == 0) {
-            throw std::logic_error("determinant of source matrix is zero");
-        }
+	Matrix Matrix::inverse() const {
+		if (this->x != this->y) {
+			throw std::logic_error("Matrix should be square");
+		}
+		double d = this->determinant();
+		if (d == 0) {
+			throw std::logic_error("determinant of source matrix is zero");
+		}
 
-        Matrix conjugate = Matrix(this->x, this->y);
-        int k = 1;
-        for (size_t i = 0; i < conjugate.getSizeX(); ++i) {
-            for (size_t j = 0; j < conjugate.getSizeY(); ++j) {
-                conjugate[i][j] = k * this->getMinor(i + 1, j + 1).determinant();
-                k *= -1;
-            }
-        }
-        return conjugate.transpose() * (1/d) ;
-    }
+		Matrix conjugate(this->x, this->y);
+		int k = 1;
+		for (size_t i = 0; i < conjugate.getSizeX(); ++i) {
+			for (size_t j = 0; j < conjugate.getSizeY(); ++j) {
+				conjugate[i][j] = k * this->getMinor(i + 1, j + 1).determinant();
+				k *= -1;
+			}
+		}
+		return conjugate.transpose() * (1/d) ;
+	}
 }
 
 std::ostream& operator<<(std::ostream& out, const PD::Matrix& matrix)
