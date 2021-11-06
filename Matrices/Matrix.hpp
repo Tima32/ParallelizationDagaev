@@ -37,6 +37,7 @@ namespace PD
         double determinant() const;
 
         Matrix inverse() const;
+
 	private:
 		size_t x{0};
 		size_t y{0};
