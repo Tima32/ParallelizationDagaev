@@ -1,3 +1,5 @@
+#include <sstream>
+#include <iomanip>
 #include "Matrix.hpp"
 
 namespace PD
@@ -163,7 +165,6 @@ namespace PD
 		}
 		return minor;
 	}
-
 	double Matrix::determinant() const
 	{
 		if (this->x != this->y) {
@@ -205,11 +206,25 @@ namespace PD
 
 std::ostream& operator<<(std::ostream& out, const PD::Matrix& matrix)
 {
+	size_t max_len{ 0 };
+	std::stringstream ss;
 	for (size_t y = 0; y < matrix.getSizeY(); ++y)
 	{
 		for (size_t x = 0; x < matrix.getSizeX(); ++x)
 		{
-			out << matrix[x][y] << " ";
+			ss << matrix[x][y];
+			auto str = ss.str();
+			auto len = str.size();
+			ss.str("");
+			max_len = len > max_len ? len : max_len;
+		}
+	}
+
+	for (size_t y = 0; y < matrix.getSizeY(); ++y)
+	{
+		for (size_t x = 0; x < matrix.getSizeX(); ++x)
+		{
+			out << std::setw(max_len) << matrix[x][y] << " ";
 		}
 		out << std::endl;
 	}
