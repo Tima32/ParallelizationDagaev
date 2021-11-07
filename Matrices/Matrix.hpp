@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <vector>
 
@@ -29,6 +30,7 @@ namespace PD
 
 		Matrix operator*(const Matrix& r) const noexcept;
 		Matrix operator*(double r) const;
+		const Matrix& operator*=(double r);
 		Matrix mul(const Matrix& r) const; //exception
 
         Matrix transpose() const;

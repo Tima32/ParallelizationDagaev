@@ -1,0 +1,150 @@
+#include <sstream>
+#include <iomanip>
+//#ifdef _OPENMP
+#include <omp.h>
+//#endif
+#include "MatrixOpenMP.hpp"
+
+//# ifdef _OPENMP
+namespace PD
+{
+	MatrixOpenMP::MatrixOpenMP()
+	{}
+	MatrixOpenMP::MatrixOpenMP(int64_t x, int64_t y) :
+		x(x), y(y), matrix(x* y)
+	{}
+	MatrixOpenMP::MatrixOpenMP(const MatrixOpenMP& o) :
+		x(o.x), y(o.y), matrix(o.matrix)
+	{}
+	MatrixOpenMP::~MatrixOpenMP()
+	{}
+
+	void MatrixOpenMP::setSize(int64_t x, int64_t y)
+	{
+		this->x = x;
+		this->y = y;
+
+		matrix.resize(x * y);
+	}
+	int64_t MatrixOpenMP::getSizeX() const
+	{
+		return x;
+	}
+	int64_t MatrixOpenMP::getSizeY() const
+	{
+		return y;
+	}
+	void MatrixOpenMP::fill(double data)
+	{
+		for (auto& a : matrix)
+			a = data;
+	}
+
+	double* MatrixOpenMP::operator[](int64_t x)
+	{
+		return &matrix[x * this->y];
+	}
+	const double* MatrixOpenMP::operator[](int64_t x) const
+	{
+		return &matrix[x * this->y];
+	}
+
+	MatrixOpenMP MatrixOpenMP::operator*(const MatrixOpenMP& r) const noexcept
+	{
+		MatrixOpenMP result(r.x, y);
+		result.fill(0);
+
+#pragma omp parallel for
+		for (int64_t iy = 0; iy < y; iy++)
+		{
+			for (int64_t ix = 0; ix < r.x; ix++)
+			{
+				for (int64_t i = 0; i < x; i++)
+				{
+					result[ix][iy] = result[ix][iy] + (*this)[i][iy] * r[ix][i];
+				}
+			}
+		}
+
+		return result;
+	}
+	MatrixOpenMP MatrixOpenMP::operator*(double r) const
+	{
+		MatrixOpenMP result(*this);
+		
+		static const auto nt = omp_get_max_threads();
+		const int64_t range = int64_t(matrix.size()) / nt;
+		const int64_t remainder = int64_t(matrix.size()) % nt;
+
+#pragma omp parallel for
+		for (int t = 0; t < nt; ++t)
+		{
+			const int64_t max = range * (t + 1);
+			for (int64_t i = range * t; i < max; ++i)
+				result.matrix[i] *= r;
+		}
+
+		const int64_t max = range * nt + remainder;
+		for (int64_t i = range * nt; i < max; ++i)
+		{
+			result.matrix[i] *= r;
+		}
+		return result;
+	}
+	const MatrixOpenMP& MatrixOpenMP::operator*=(double r)
+	{
+		static const auto nt = omp_get_max_threads();
+		const int64_t range = int64_t(matrix.size()) / nt;
+		const int64_t remainder = int64_t(matrix.size()) % nt;
+
+#pragma omp parallel for
+		for (int t = 0; t < nt; ++t)
+		{
+			const int64_t max = range * (t + 1);
+			for (int64_t i = range * t; i < max; ++i)
+				matrix[i] *= r;
+		}
+
+		const int64_t max = range * nt + remainder;
+		for (int64_t i = range * nt; i < max; ++i)
+		{
+			matrix[i] *= r;
+		}
+		return *this;
+	}
+	MatrixOpenMP MatrixOpenMP::mul(const MatrixOpenMP& r) const
+	{
+		if (x != r.y || y != r.x)
+			throw std::logic_error("Matrices of the wrong dimension");
+		return *this * r;
+	}
+
+}
+
+std::ostream& operator<<(std::ostream& out, const PD::MatrixOpenMP& matrix)
+{
+	int64_t max_len{ 0 };
+	std::stringstream ss;
+	for (int64_t y = 0; y < matrix.getSizeY(); ++y)
+	{
+		for (int64_t x = 0; x < matrix.getSizeX(); ++x)
+		{
+			ss << matrix[x][y];
+			auto str = ss.str();
+			auto len = int64_t(str.size());
+			ss.str("");
+			max_len = len > max_len ? len : max_len;
+		}
+	}
+
+	for (int64_t y = 0; y < matrix.getSizeY(); ++y)
+	{
+		for (int64_t x = 0; x < matrix.getSizeX(); ++x)
+		{
+			out << std::setw(max_len) << matrix[x][y] << " ";
+		}
+		out << std::endl;
+	}
+	return out;
+}
+//#endif

@@ -113,7 +113,6 @@ namespace PD
 
 		return result;
 	}
-
 	Matrix Matrix::operator*(double r) const
 	{
 		Matrix result(*this);
@@ -121,7 +120,12 @@ namespace PD
 			a *= r;
 		return result;
 	}
-
+	const Matrix& Matrix::operator*=(double r)
+	{
+		for (auto& a : matrix)
+			a *= r;
+		return *this;
+	}
 	Matrix Matrix::mul(const Matrix& r) const
 	{
 		if (x != r.y || y != r.x)

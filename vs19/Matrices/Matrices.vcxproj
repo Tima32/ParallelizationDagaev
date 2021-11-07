@@ -136,6 +136,9 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <OpenMPSupport>
+      </OpenMPSupport>
+      <AdditionalOptions>/openmp:experimental %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,11 +148,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Matrices\Benchmark.cpp" />
     <ClCompile Include="..\..\Matrices\main.cpp" />
     <ClCompile Include="..\..\Matrices\Matrix.cpp" />
+    <ClCompile Include="..\..\Matrices\MatrixOpenMP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Matrices\Benchmark.hpp" />
     <ClInclude Include="..\..\Matrices\Matrix.hpp" />
+    <ClInclude Include="..\..\Matrices\MatrixOpenMP.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
