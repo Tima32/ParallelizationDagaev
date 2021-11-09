@@ -15,17 +15,18 @@ using namespace std;
 
 namespace PD::BENCH
 {
-	std::wstring utf8ToWstring(const std::string& str) {
+	/*std::string utf8ToWstring(const std::string& str) {
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> myconv;
 		return myconv.from_bytes(str);
 	}
-	std::wstring DeleteCharacters(const std::wstring& str)
+	*/
+	std::string DeleteCharacters(const std::string& str)
 	{
-		wstring r;
+		string r;
 		r.reserve(str.size() + 1);
 
 		for (auto w : str)
-			if (w != L':')
+			if (w != ':')
 				r += w;
 
 		return r;
@@ -58,15 +59,15 @@ namespace PD::BENCH
 
 	template<typename T> void TestMulScalar(size_t multipler = 100, size_t iterations = 50)
 	{
-		static const wstring func_name{ L"TestMulScalar" };
+		static const string func_name{ "TestMulScalar" };
 
 
-		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
-		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
+		static const string test_name = func_name + " " + typeid(T).name();
+		static const string file_name = ".//Tests//" + DeleteCharacters(test_name) + ".txt";
 		wfstream test_file(file_name, ios::out);
 		test_file.precision(5);
 
-		wcout << L"Test: " << test_name << L" started" << endl;
+		cout << "Test: " << test_name << " started" << endl;
 		for (size_t i = 0; i < iterations; ++i)
 		{
 			size_t size = 3 + i * multipler;
@@ -83,22 +84,22 @@ namespace PD::BENCH
 			double time_s = (double)duration.count() / 1000;
 			test_file << time_s << " ";
 
-			wcout << L"Test: " << test_name << L" Time: " << setprecision(5) << time_s << " ";
-			wcout << i << " " << size << L" " << (intmax_t(Sum(a)) % 10) << endl;
+			cout << "Test: " << test_name << " Time: " << setprecision(5) << time_s << " ";
+			cout << i << " " << size << " " << (intmax_t(Sum(a)) % 10) << endl;
 		}
-		wcout << L"Test: " << test_name << L" finished" << endl;
+		cout << "Test: " << test_name << " finished" << endl;
 		test_file.close();
 	}
 	template<typename T> void TestMul(size_t multipler = 10, size_t iterations = 50)
 	{
-		static const wstring func_name{ L"TestMul" };
+		static const string func_name{ "TestMul" };
 
-		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
-		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
+		static const string test_name = func_name + " " + typeid(T).name();
+		static const string file_name = ".//Tests//" + DeleteCharacters(test_name) + ".txt";
 		wfstream test_file(file_name, ios::out);
 		test_file.precision(5);
 
-		wcout << L"Test: " << test_name << L" started" << endl;
+		cout << "Test: " << test_name << " started" << endl;
 		for (size_t i = 0; i < iterations; ++i)
 		{
 			size_t size = 3 + i * multipler;
@@ -118,23 +119,23 @@ namespace PD::BENCH
 			double time_s = (double)duration.count() / 1000;
 			test_file << time_s << " ";
 
-			wcout << L"Test: " << test_name << L" Time: " << setprecision(5) << time_s << " ";
-			wcout << i << " " << size << L" " << (intmax_t(Sum(c)) % 10) << endl;
+			cout << "Test: " << test_name << " Time: " << setprecision(5) << time_s << " ";
+			cout << i << " " << size << " " << (intmax_t(Sum(c)) % 10) << endl;
 		}
-		wcout << L"Test: " << test_name << L" finished" << endl;
+		cout << "Test: " << test_name << " finished" << endl;
 		test_file.close();
 	}
 	template<typename T> void TestSum(size_t multipler = 500, size_t iterations = 50)
 	{
-		static const wstring func_name{ L"TestSum" };
+		static const string func_name{ "TestSum" };
 
 
-		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
-		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
+		static const string test_name = func_name + " " + typeid(T).name();
+		static const string file_name = ".//Tests//" + DeleteCharacters(test_name) + ".txt";
 		wfstream test_file(file_name, ios::out);
 		test_file.precision(5);
 
-		wcout << L"Test: " << test_name << L" started" << endl;
+		cout << "Test: " << test_name << " started" << endl;
 		for (size_t i = 0; i < iterations; ++i)
 		{
 			size_t size = 3 + i * multipler;
@@ -152,23 +153,23 @@ namespace PD::BENCH
 			double time_s = (double)duration.count() / 1000;
 			test_file << time_s << " ";
 
-			wcout << L"Test: " << test_name << L" Time: " << setprecision(5) << time_s << " ";
-			wcout << i << " " << size << L" " << (intmax_t(Sum(c)) % 10) << endl;
+			cout << "Test: " << test_name << " Time: " << setprecision(5) << time_s << " ";
+			cout << i << " " << size << " " << (intmax_t(Sum(c)) % 10) << endl;
 		}
-		wcout << L"Test: " << test_name << L" finished" << endl;
+		cout << "Test: " << test_name << " finished" << endl;
 		test_file.close();
 	}
 	template<typename T> void TestTranspose(size_t multipler = 500, size_t iterations = 50)
 	{
-		static const wstring func_name{ L"TestTranspose" };
+		static const string func_name{ "TestTranspose" };
 
 
-		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
-		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
+		static const string test_name = func_name + " " + typeid(T).name();
+		static const string file_name = ".//Tests//" + DeleteCharacters(test_name) + ".txt";
 		wfstream test_file(file_name, ios::out);
 		test_file.precision(5);
 
-		wcout << L"Test: " << test_name << L" started" << endl;
+		cout << "Test: " << test_name << " started" << endl;
 		for (size_t i = 0; i < iterations; ++i)
 		{
 			size_t size = 3 + i * multipler;
@@ -184,23 +185,23 @@ namespace PD::BENCH
 			double time_s = (double)duration.count() / 1000;
 			test_file << time_s << " ";
 
-			wcout << L"Test: " << test_name << L" Time: " << setprecision(5) << time_s << " ";
-			wcout << i << " " << size << L" " << (intmax_t(Sum(c)) % 10) << endl;
+			cout << "Test: " << test_name << " Time: " << setprecision(5) << time_s << " ";
+			cout << i << " " << size << " " << (intmax_t(Sum(c)) % 10) << endl;
 		}
-		wcout << L"Test: " << test_name << L" finished" << endl;
+		cout << "Test: " << test_name << " finished" << endl;
 		test_file.close();
 	}
 	template<typename T> void TestDeterminant(size_t multipler = 1, size_t iterations = 11)
 	{
-		static const wstring func_name{ L"TestDeterminant" };
+		static const string func_name{ "TestDeterminant" };
 
 
-		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
-		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
+		static const string test_name = func_name + " " + typeid(T).name();
+		static const string file_name = ".//Tests//" + DeleteCharacters(test_name) + ".txt";
 		wfstream test_file(file_name, ios::out);
 		test_file.precision(5);
 
-		wcout << L"Test: " << test_name << L" started" << endl;
+		cout << "Test: " << test_name << " started" << endl;
 		for (size_t i = 0; i < iterations; ++i)
 		{
 			size_t size = 3 + i * multipler;
@@ -216,10 +217,10 @@ namespace PD::BENCH
 			double time_s = (double)duration.count() / 1000;
 			test_file << time_s << " ";
 
-			wcout << L"Test: " << test_name << L" Time: " << setprecision(5) << time_s << " ";
-			wcout << i << " " << size << L" " << c << endl;
+			cout << "Test: " << test_name << " Time: " << setprecision(5) << time_s << " ";
+			cout << i << " " << size << " " << c << endl;
 		}
-		wcout << L"Test: " << test_name << L" finished" << endl;
+		cout << "Test: " << test_name << " finished" << endl;
 		test_file.close();
 	}
 
