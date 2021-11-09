@@ -21,15 +21,26 @@ namespace PD
 		double* operator[](int64_t x);
 		const double* operator[](int64_t x) const;
 
+		MatrixOpenMP operator+(const MatrixOpenMP& r) const noexcept;
+		MatrixOpenMP operator+(double r) const noexcept;
+		MatrixOpenMP add(const MatrixOpenMP& r) const; //exception
+
 		MatrixOpenMP operator*(const MatrixOpenMP& r) const noexcept;
 		MatrixOpenMP operator*(double r) const;
 		const MatrixOpenMP& operator*=(double r);
 		MatrixOpenMP mul(const MatrixOpenMP& r) const; //exception
 
+		MatrixOpenMP transpose() const;
+
+		MatrixOpenMP getMinor(const int64_t n, const int64_t m) const;
+		double determinant() const;
+
 	private:
 		int64_t x{ 0 };
 		int64_t y{ 0 };
 		std::vector<double> matrix;
+
+		double determinantPr() const;
 	};
 }
 

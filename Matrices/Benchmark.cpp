@@ -5,9 +5,11 @@
 #include <chrono>
 #include <fstream>
 #include <codecvt>
+#include <mutex>
 
 #include "Matrix.hpp"
 #include "MatrixOpenMP.hpp"
+#include "MatrixThreadPool.hpp"
 
 using namespace std;
 
@@ -91,7 +93,6 @@ namespace PD::BENCH
 	{
 		static const wstring func_name{ L"TestMul" };
 
-
 		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
 		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
 		wfstream test_file(file_name, ios::out);
@@ -123,13 +124,125 @@ namespace PD::BENCH
 		wcout << L"Test: " << test_name << L" finished" << endl;
 		test_file.close();
 	}
+	template<typename T> void TestSum(size_t multipler = 500, size_t iterations = 50)
+	{
+		static const wstring func_name{ L"TestSum" };
+
+
+		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
+		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
+		wfstream test_file(file_name, ios::out);
+		test_file.precision(5);
+
+		wcout << L"Test: " << test_name << L" started" << endl;
+		for (size_t i = 0; i < iterations; ++i)
+		{
+			size_t size = 3 + i * multipler;
+			T a(size, size);
+			T b(size, size);
+			FillRandom(a);
+			FillRandom(b);
+
+			auto begin_t = std::chrono::high_resolution_clock::now();
+
+			auto c = a + b;
+
+			auto end_t = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_t - begin_t);
+			double time_s = (double)duration.count() / 1000;
+			test_file << time_s << " ";
+
+			wcout << L"Test: " << test_name << L" Time: " << setprecision(5) << time_s << " ";
+			wcout << i << " " << size << L" " << (intmax_t(Sum(c)) % 10) << endl;
+		}
+		wcout << L"Test: " << test_name << L" finished" << endl;
+		test_file.close();
+	}
+	template<typename T> void TestTranspose(size_t multipler = 500, size_t iterations = 50)
+	{
+		static const wstring func_name{ L"TestTranspose" };
+
+
+		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
+		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
+		wfstream test_file(file_name, ios::out);
+		test_file.precision(5);
+
+		wcout << L"Test: " << test_name << L" started" << endl;
+		for (size_t i = 0; i < iterations; ++i)
+		{
+			size_t size = 3 + i * multipler;
+			T a(size, size);
+			FillRandom(a);
+
+			auto begin_t = std::chrono::high_resolution_clock::now();
+
+			auto c = a.transpose();
+
+			auto end_t = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_t - begin_t);
+			double time_s = (double)duration.count() / 1000;
+			test_file << time_s << " ";
+
+			wcout << L"Test: " << test_name << L" Time: " << setprecision(5) << time_s << " ";
+			wcout << i << " " << size << L" " << (intmax_t(Sum(c)) % 10) << endl;
+		}
+		wcout << L"Test: " << test_name << L" finished" << endl;
+		test_file.close();
+	}
+	template<typename T> void TestDeterminant(size_t multipler = 1, size_t iterations = 11)
+	{
+		static const wstring func_name{ L"TestDeterminant" };
+
+
+		static const wstring test_name = func_name + L" " + utf8ToWstring(typeid(T).name());
+		static const wstring file_name = L".//Tests//" + DeleteCharacters(test_name) + L".txt";
+		wfstream test_file(file_name, ios::out);
+		test_file.precision(5);
+
+		wcout << L"Test: " << test_name << L" started" << endl;
+		for (size_t i = 0; i < iterations; ++i)
+		{
+			size_t size = 3 + i * multipler;
+			T a(size, size);
+			FillRandom(a);
+
+			auto begin_t = std::chrono::high_resolution_clock::now();
+
+			auto c = a.determinant();
+
+			auto end_t = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_t - begin_t);
+			double time_s = (double)duration.count() / 1000;
+			test_file << time_s << " ";
+
+			wcout << L"Test: " << test_name << L" Time: " << setprecision(5) << time_s << " ";
+			wcout << i << " " << size << L" " << c << endl;
+		}
+		wcout << L"Test: " << test_name << L" finished" << endl;
+		test_file.close();
+	}
 
 	void BenchMain()
 	{
 		//TestMulScalar<Matrix>();
 		//TestMulScalar<MatrixOpenMP>();
+		//TestMulScalar<MatrixThreadPool>();
 
 		TestMul<Matrix>();
 		TestMul<MatrixOpenMP>();
+		TestMul<MatrixThreadPool>();
+
+		//TestSum<Matrix>();
+		//TestSum<MatrixOpenMP>();
+		//TestSum<MatrixThreadPool>();
+		
+		//TestTranspose<Matrix>();
+		//TestTranspose<MatrixOpenMP>();
+		//TestTranspose<MatrixThreadPool>();
+
+		//TestDeterminant<Matrix>();
+		//TestDeterminant<MatrixOpenMP>();
+		//TestDeterminant<MatrixThreadPool>();
 	}
 }

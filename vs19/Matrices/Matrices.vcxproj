@@ -152,11 +152,14 @@
     <ClCompile Include="..\..\Matrices\main.cpp" />
     <ClCompile Include="..\..\Matrices\Matrix.cpp" />
     <ClCompile Include="..\..\Matrices\MatrixOpenMP.cpp" />
+    <ClCompile Include="..\..\Matrices\MatrixThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Matrices\Benchmark.hpp" />
     <ClInclude Include="..\..\Matrices\Matrix.hpp" />
     <ClInclude Include="..\..\Matrices\MatrixOpenMP.hpp" />
+    <ClInclude Include="..\..\Matrices\MatrixThreadPool.hpp" />
+    <ClInclude Include="..\..\Matrices\ThreadPool.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

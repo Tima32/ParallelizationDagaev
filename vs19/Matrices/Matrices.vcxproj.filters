@@ -27,6 +27,9 @@
     <ClCompile Include="..\..\Matrices\Benchmark.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Matrices\MatrixThreadPool.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Matrices\Matrix.hpp">
@@ -36,6 +39,12 @@
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Matrices\Benchmark.hpp">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Matrices\MatrixThreadPool.hpp">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Matrices\ThreadPool.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>

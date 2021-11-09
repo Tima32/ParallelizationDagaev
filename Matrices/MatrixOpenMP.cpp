@@ -1,17 +1,14 @@
 #include <sstream>
 #include <iomanip>
-//#ifdef _OPENMP
 #include <omp.h>
-//#endif
 #include "MatrixOpenMP.hpp"
 
-//# ifdef _OPENMP
 namespace PD
 {
 	MatrixOpenMP::MatrixOpenMP()
 	{}
 	MatrixOpenMP::MatrixOpenMP(int64_t x, int64_t y) :
-		x(x), y(y), matrix(x* y)
+		x(x), y(y), matrix(x * y)
 	{}
 	MatrixOpenMP::MatrixOpenMP(const MatrixOpenMP& o) :
 		x(o.x), y(o.y), matrix(o.matrix)
@@ -47,6 +44,60 @@ namespace PD
 	const double* MatrixOpenMP::operator[](int64_t x) const
 	{
 		return &matrix[x * this->y];
+	}
+
+	MatrixOpenMP MatrixOpenMP::operator+(const MatrixOpenMP& r) const noexcept
+	{
+		MatrixOpenMP result(*this);
+
+		static const auto nt = omp_get_max_threads();
+		const int64_t range = int64_t(matrix.size()) / nt;
+		const int64_t remainder = int64_t(matrix.size()) % nt;
+
+#pragma omp parallel for
+		for (int t = 0; t < nt; ++t)
+		{
+			const int64_t max = range * (t + 1);
+			for (int64_t i = range * t; i < max; ++i)
+				result.matrix[i] += r.matrix[i];
+		}
+
+		const int64_t max = range * nt + remainder;
+		for (int64_t i = range * nt; i < max; ++i)
+		{
+			result.matrix[i] += r.matrix[i];
+		}
+		return result;
+	}
+	MatrixOpenMP MatrixOpenMP::operator+(double r) const noexcept
+	{
+		MatrixOpenMP result(*this);
+
+		static const auto nt = omp_get_max_threads();
+		const int64_t range = int64_t(matrix.size()) / nt;
+		const int64_t remainder = int64_t(matrix.size()) % nt;
+
+#pragma omp parallel for
+		for (int t = 0; t < nt; ++t)
+		{
+			const int64_t max = range * (t + 1);
+			for (int64_t i = range * t; i < max; ++i)
+				result.matrix[i] += r;
+		}
+
+		const int64_t max = range * nt + remainder;
+		for (int64_t i = range * nt; i < max; ++i)
+		{
+			result.matrix[i] += r;
+		}
+
+		return result;
+	}
+	MatrixOpenMP MatrixOpenMP::add(const MatrixOpenMP& r) const
+	{
+		if (x != r.x || y != r.y)
+			throw std::logic_error("Matrices of different dimensions");
+		return *this + r;
 	}
 
 	MatrixOpenMP MatrixOpenMP::operator*(const MatrixOpenMP& r) const noexcept
@@ -119,6 +170,79 @@ namespace PD
 		return *this * r;
 	}
 
+	MatrixOpenMP MatrixOpenMP::transpose() const
+	{
+		MatrixOpenMP other(this->y, this->x);
+#pragma omp parallel for
+		for (int64_t i = 0; i < other.getSizeX(); ++i) {
+			for (int64_t j = 0; j < other.getSizeY(); ++j) {
+				other[i][j] = (*this)[j][i];
+			}
+		}
+		return other;
+	}
+
+	MatrixOpenMP MatrixOpenMP::getMinor(const int64_t n, const int64_t m) const
+	{
+		if ((this->x == 1) || (this->y == 1)) {
+			throw std::logic_error("Y and X should be more than 1");
+		}
+		if ((this->x < n) || (1 > n) || (this->y < m) || (1 > m)) {
+			throw std::logic_error("Wrong n or m");
+		}
+		MatrixOpenMP minor(this->x - 1, this->y - 1);
+		bool flag_row = false;
+		bool flag_col = false;
+
+		for (int64_t i = 0; i < minor.getSizeX(); ++i) {
+			for (int64_t j = 0; j < minor.getSizeY(); ++j) {
+				if (i == n - 1) {
+					flag_row = true;
+				}
+				if (j == m - 1) {
+					flag_col = true;
+				}
+				minor[i][j] = (*this)[i + flag_row][j + flag_col];
+			}
+			flag_col = false;
+		}
+		return minor;
+	}
+	double MatrixOpenMP::determinant() const
+	{
+		if (this->x != this->y) {
+			throw std::logic_error("MatrixOpenMP should be square");
+		}
+		double d = 0;
+		int64_t k = 1;
+		if (this->x == 1) {
+			return (*this)[0][0];
+		}
+#pragma omp parallel for
+		for (int64_t i = 0; i < this->x; ++i) {
+			d += k * (*this)[i][0] * this->getMinor(i + 1, 1).determinantPr();
+			k *= -1;
+		}
+		return d;
+	}
+
+	//private
+	double MatrixOpenMP::determinantPr() const
+	{
+		if (this->x != this->y) {
+			throw std::logic_error("MatrixOpenMP should be square");
+		}
+		double d = 0;
+		int64_t k = 1;
+		if (this->x == 1) {
+			return (*this)[0][0];
+		}
+		for (int64_t i = 0; i < this->x; ++i) {
+			d += k * (*this)[i][0] * this->getMinor(i + 1, 1).determinantPr();
+			k *= -1;
+		}
+		return d;
+	}
 }
 
 std::ostream& operator<<(std::ostream& out, const PD::MatrixOpenMP& matrix)
@@ -147,4 +271,3 @@ std::ostream& operator<<(std::ostream& out, const PD::MatrixOpenMP& matrix)
 	}
 	return out;
 }
-//#endif
