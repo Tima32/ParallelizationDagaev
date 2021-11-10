@@ -1,0 +1,2 @@
+all:
+	g++ ../Matrices/main.cpp ../Matrices/Benchmark.cpp ../Matrices/Matrix.cpp ../Matrices/MatrixOpenMP.cpp ../Matrices/MatrixThreadPool.cpp -o bin/matrix_pr -std=c++2a -fopenmp
