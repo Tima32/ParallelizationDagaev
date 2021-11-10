@@ -226,24 +226,24 @@ namespace PD::BENCH
 
 	void BenchMain()
 	{
-		//TestMulScalar<Matrix>();
-		//TestMulScalar<MatrixOpenMP>();
-		//TestMulScalar<MatrixThreadPool>();
+		TestMulScalar<Matrix>();
+		TestMulScalar<MatrixOpenMP>();
+		TestMulScalar<MatrixThreadPool>();
 
 		TestMul<Matrix>();
 		TestMul<MatrixOpenMP>();
 		TestMul<MatrixThreadPool>();
 
-		//TestSum<Matrix>();
-		//TestSum<MatrixOpenMP>();
-		//TestSum<MatrixThreadPool>();
+		TestSum<Matrix>();
+		TestSum<MatrixOpenMP>();
+		TestSum<MatrixThreadPool>();
 		
-		//TestTranspose<Matrix>();
-		//TestTranspose<MatrixOpenMP>();
-		//TestTranspose<MatrixThreadPool>();
+		TestTranspose<Matrix>();
+		TestTranspose<MatrixOpenMP>();
+		TestTranspose<MatrixThreadPool>();
 
-		//TestDeterminant<Matrix>();
-		//TestDeterminant<MatrixOpenMP>();
-		//TestDeterminant<MatrixThreadPool>();
+		TestDeterminant<Matrix>();
+		TestDeterminant<MatrixOpenMP>();
+		TestDeterminant<MatrixThreadPool>();
 	}
 }
