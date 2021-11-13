@@ -1,6 +1,6 @@
 ﻿##My
-vs19/bin/Tests/*
-G++/bin/Tests/*
+vs19/bin/
+G++/bin/
 
 
 ## Ignore Visual Studio temporary files, build results, and
