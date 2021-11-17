@@ -191,7 +191,7 @@ namespace PD::BENCH
 		cout << "Test: " << test_name << " finished" << endl;
 		test_file.close();
 	}
-	template<typename T> void TestDeterminant(size_t multipler = 1, size_t iterations = 11)
+	template<typename T> void TestDeterminant(size_t multipler = 1, size_t iterations = 12)
 	{
 		static const string func_name{ "TestDeterminant" };
 
@@ -218,32 +218,68 @@ namespace PD::BENCH
 			test_file << time_s << " ";
 
 			cout << "Test: " << test_name << " Time: " << setprecision(5) << time_s << " ";
-			cout << i << " " << size << " " << c << endl;
+			cout << i << " " << size << " " << uint64_t(c) % 1000 << endl;
 		}
 		cout << "Test: " << test_name << " finished" << endl;
 		test_file.close();
 	}
+	/*void TestMulDiffNumThr(size_t multipler = 20, size_t iterations = 100)
+	{
+		static const string func_name{ "TestMulDiffNumThr" };
+
+		static const string test_name = func_name;
+		static const string file_name = ".//Tests//" + DeleteCharacters(test_name) + ".txt";
+		wfstream test_file(file_name, ios::out);
+		test_file.precision(5);
+
+		cout << "Test: " << test_name << " started" << endl;
+		for (size_t i = 0; i < iterations; ++i)
+		{
+			size_t size = 3 + 430;
+			MatrixThreadPool::SetPoolSize((i+1)*multipler);
+			MatrixThreadPool a(size, size);
+			MatrixThreadPool b(size, size);
+			FillRandom(a);
+			FillRandom(b);
+
+			auto begin_t = std::chrono::high_resolution_clock::now();
+
+			auto c = a * b;
+
+			auto end_t = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_t - begin_t);
+			double time_s = (double)duration.count() / 1000;
+			test_file << time_s << " ";
+
+			cout << "Test: " << test_name << " Time: " << setprecision(5) << time_s << " ";
+			cout << i << " " << size << " " << (intmax_t(Sum(c)) % 10) << endl;
+		}
+		cout << "Test: " << test_name << " finished" << endl;
+		test_file.close();
+	}*/
 
 	void BenchMain()
 	{
-		TestMulScalar<Matrix>();
-		TestMulScalar<MatrixOpenMP>();
-		TestMulScalar<MatrixThreadPool>();
+		//TestMulScalar<Matrix>();
+		//TestMulScalar<MatrixOpenMP>();
+		//TestMulScalar<MatrixThreadPool>();
 
-		TestMul<Matrix>();
-		TestMul<MatrixOpenMP>();
-		TestMul<MatrixThreadPool>();
+		//TestMul<Matrix>();
+		//TestMul<MatrixOpenMP>();
+		//TestMul<MatrixThreadPool>();
 
-		TestSum<Matrix>();
-		TestSum<MatrixOpenMP>();
-		TestSum<MatrixThreadPool>();
+		//TestSum<Matrix>();
+		//TestSum<MatrixOpenMP>();
+		//TestSum<MatrixThreadPool>();
 		
-		TestTranspose<Matrix>();
-		TestTranspose<MatrixOpenMP>();
-		TestTranspose<MatrixThreadPool>();
+		//TestTranspose<Matrix>();
+		//TestTranspose<MatrixOpenMP>();
+		//TestTranspose<MatrixThreadPool>();
 
-		TestDeterminant<Matrix>();
-		TestDeterminant<MatrixOpenMP>();
-		TestDeterminant<MatrixThreadPool>();
+		//TestDeterminant<Matrix>();
+		//TestDeterminant<MatrixOpenMP>();
+		//TestDeterminant<MatrixThreadPool>();
+
+		//TestMulDiffNumThr();
 	}
 }
