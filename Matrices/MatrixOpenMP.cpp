@@ -218,10 +218,16 @@ namespace PD
 		if (this->x == 1) {
 			return (*this)[0][0];
 		}
-#pragma omp parallel for
+
+		#pragma omp parallel for
 		for (int64_t i = 0; i < this->x; ++i) {
-			d += k * (*this)[i][0] * this->getMinor(i + 1, 1).determinantPr();
-			k *= -1;
+			size_t k = i % 2 ? -1 : 1;
+			auto r = k * (*this)[i][0] * this->getMinor(i + 1, 1).determinantPr();
+
+			#pragma omp critica
+			{
+				d += r;
+			}
 		}
 		return d;
 	}
