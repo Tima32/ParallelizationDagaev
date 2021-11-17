@@ -224,7 +224,7 @@ namespace PD
 			size_t k = i % 2 ? -1 : 1;
 			auto r = k * (*this)[i][0] * this->getMinor(i + 1, 1).determinantPr();
 
-			#pragma omp critica
+			#pragma omp critical
 			{
 				d += r;
 			}
