@@ -4,6 +4,6 @@ using namespace std;
 
 int main()
 {
-	cout << "Hello I am MatricesClusterServer!" << endl;
+	cout << "Hello I am MatricesClusterServerSFML!" << endl;
 	return 0;
 }
