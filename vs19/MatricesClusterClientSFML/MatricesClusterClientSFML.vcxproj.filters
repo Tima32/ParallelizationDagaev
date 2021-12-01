@@ -13,10 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\ClusterMatrix">
+      <UniqueIdentifier>{6f5bb719-f483-4200-8147-2cc111843fcb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mainClient.cpp">
+    <ClCompile Include="..\..\ClusterMatrix\ClusterMatrix.cpp">
+      <Filter>Исходные файлы\ClusterMatrix</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MatricesClusterClientSFML\mainClient.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\MatricesClusterClientSFML\Client.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ClusterMatrix\ClusterMatrix.hpp">
+      <Filter>Исходные файлы\ClusterMatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ClusterMatrix\ThreadPool.hpp">
+      <Filter>Исходные файлы\ClusterMatrix</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MatricesClusterClientSFML\Client.hpp">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

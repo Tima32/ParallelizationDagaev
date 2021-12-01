@@ -264,9 +264,9 @@ namespace PD::BENCH
 		//TestMulScalar<MatrixOpenMP>();
 		//TestMulScalar<MatrixThreadPool>();
 
-		//TestMul<Matrix>();
-		//TestMul<MatrixOpenMP>();
-		//TestMul<MatrixThreadPool>();
+		TestMul<Matrix>();
+		TestMul<MatrixOpenMP>();
+		TestMul<MatrixThreadPool>();
 
 		//TestSum<Matrix>();
 		//TestSum<MatrixOpenMP>();
